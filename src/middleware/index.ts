@@ -59,7 +59,7 @@ function createAxiosAuthMiddleware() {
             const errorParse: IErrorParse = JSON.parse(errMessage)
             console.log('errorParse', errorParse?.error)
 
-            if (errorParse?.message && errorParse.error !== 'AUTH-02') {
+            if (errorParse?.message) {
               error.isErrorMessageToasted = true
               notification({ type: 'error', text: toTitleCaseSentence(errorParse?.message) })
             }

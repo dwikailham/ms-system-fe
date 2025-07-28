@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prefer-regex-literals */
 import { useEffect, useRef } from 'react'
+import dayjs from 'dayjs'
 
 export function usePrevious(value: any) {
   const ref = useRef()
@@ -135,4 +136,15 @@ export const uuidv4 = () => {
 
     return v.toString(16)
   })
+}
+
+export const getInitials = (string: string) =>
+  string.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), '')
+
+export const formatDate = (val: string): string => {
+  if (val) {
+    return dayjs(val).format('DD MMM YYYY')
+  }
+
+  return ''
 }

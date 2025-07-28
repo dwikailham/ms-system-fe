@@ -16,7 +16,7 @@ import { Provider } from 'react-redux'
 // ** Emotion Imports
 import { CacheProvider } from '@emotion/react'
 import type { EmotionCache } from '@emotion/cache'
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
 
 // ** Config Imports
@@ -28,6 +28,8 @@ import themeConfig from 'src/configs/themeConfig'
 
 // ** Third Party Import
 import { Toaster } from 'react-hot-toast'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
 
 // ** Component Imports
 import UserLayout from 'src/layouts/UserLayout'
@@ -109,6 +111,8 @@ const App = (_props: ExtendedAppProps<PageProps>) => {
   const { store, props } = wrapper.useWrappedStore(pageProps)
 
   // Variables
+  const queryClient = new QueryClient()
+
   const getLayout = Component.getLayout ?? (page => <UserLayout>{page}</UserLayout>)
 
   const setConfig = Component.setConfig ?? undefined
@@ -132,29 +136,33 @@ const App = (_props: ExtendedAppProps<PageProps>) => {
           <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
         </Head>
-
-        <AuthProvider>
-          <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
-            <SettingsConsumer>
-              {({ settings }) => {
-                return (
-                  <ThemeComponent settings={settings}>
-                    <WindowWrapper>
-                      <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                          {getLayout(<Component {...props} />)}
-                        </AclGuard>
-                      </Guard>
-                    </WindowWrapper>
-                    <ReactHotToast>
-                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                    </ReactHotToast>
-                  </ThemeComponent>
-                )
-              }}
-            </SettingsConsumer>
-          </SettingsProvider>
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
+              <SettingsConsumer>
+                {({ settings }) => {
+                  return (
+                    <ThemeComponent settings={settings}>
+                      <WindowWrapper>
+                        <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                          <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                            {getLayout(<Component {...props} />)}
+                          </AclGuard>
+                        </Guard>
+                      </WindowWrapper>
+                      <ReactHotToast>
+                        <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+                      </ReactHotToast>
+                      <ToastContainer containerId={'A'} position={'bottom-left'} theme='colored' />
+                      <ToastContainer containerId={'B'} position={'top-right'} theme='colored' />
+                      <ToastContainer containerId={'C'} position={'bottom-center'} theme='colored' />
+                    </ThemeComponent>
+                  )
+                }}
+              </SettingsConsumer>
+            </SettingsProvider>
+          </AuthProvider>
+        </QueryClientProvider>
       </CacheProvider>
     </Provider>
   )

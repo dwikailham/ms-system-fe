@@ -74,7 +74,6 @@ const LoginPage = () => {
   // ** Functions
   const {
     control,
-    setError,
     handleSubmit,
     formState: { errors }
   } = useForm<FormData>({
@@ -83,9 +82,10 @@ const LoginPage = () => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     // const { username, password } = data
-    HttpClient.post('/login', data)
+
+    await HttpClient.post('/login', data)
       .then(async res => {
         // window.localStorage.setItem(authConfig.storageTokenKeyName, res.data.accessToken)
         const returnUrl = router.query.returnUrl
@@ -99,10 +99,6 @@ const LoginPage = () => {
       })
       .catch(err => {
         console.log('err', err)
-        setError('username', {
-          type: 'manual',
-          message: 'Username or Password is invalid'
-        })
       })
   }
 

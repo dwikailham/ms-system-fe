@@ -1,0 +1,49 @@
+{
+  "onboarding": {
+    "quick_register": "I WANT IT!",
+    "head_title": "15% OFF",
+    "header_title": "No minimum purchase \n Only 1-31 October 2022 at all ISMAYA outlets"
+  },
+  "verify": {
+    "step1of2": "Step 1 of 2",
+    "placeholder": "Phone number*",
+    "verifyNumber": "Verify your number.",
+    "verifyNumberInfo": "Verify your mobile number by entering OTP code sent via SMS.",
+    "buttonVerify": "Verify number",
+    "errorNumberValidation": "sorry only smarfren number"
+  },
+  "otp": {
+    "resendOtp": "Resend OTP in",
+    "button": "Verify",
+    "sendto": "Send to +62",
+    "resentManualOTp": "Send Otp Again"
+  },
+  "formData": {
+    "step1of2": "Step 2 of 2",
+    "fill": "Fill your details",
+    "phoneNumber": "Phone number*",
+    "fullname": "Full name*",
+    "dob": " Date of birth",
+    "email": "E-mail address*",
+    "button": "Register"
+  },
+  "complete": {
+    "thankyou_new": "Visit Ismaya Outlet and \n tell us your phone number.",
+    "thankyou_exist": "Thank you for being a part of ISMAYA FAMILY",
+    "promo": "ENJOY 15% OFF ONLY 1-30 OCTOBER 2022",
+    "pin": "your pin will be",
+    "download": "Download the app for more rewards."
+  },
+  "promo-membership-smartfren": {
+    "term": "Terms & Conditions:",
+    "term-list": "1. Without minimum purchase \n 2. Valid for every transactions \n 3. Valid at any Ismaya outlets all brands \n 4. Valid for dine in only \n 5. Valid on 1-31 October 2022 \n 6. Valid only for food & non-alcohol beverage \n 7. Can not be accumulated with other vouchers",
+    "how-title": "How to use:",
+    "how-list": "1. Visit any Ismaya outlets \n 2. Inform our staff to use Smartfren 15% \n 3. Give your Smartfren numbers to our staff \n 4. Discount 15% will be applied to your transactions"
+  },
+  "promo-membership-kawan-lama": {
+    "term": "Terms & Conditions:",
+    "term-list": "1. Without minimum purchase \n 2. Valid for every transactions \n 3. Valid at any Ismaya outlets all brands \n 4. Valid for dine in only \n 5. Valid on 1-31 October 2022 \n 6. Valid only for food & non-alcohol beverage \n 7. Can not be accumulated with other vouchers",
+    "how-title": "How to use:",
+    "how-list": "1. Visit any Ismaya outlets \n 2. Inform our staff to use Kawan Lama 15% \n 3. Give your Kawan Lama numbers to our staff \n 4. Discount 15% will be applied to your transactions"
+  }
+}
