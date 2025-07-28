@@ -1,8 +1,8 @@
 // ** React Imports
 import { useState, ReactNode } from 'react'
 
-// ** Next Imports
-// import Link from 'next/link'
+// ** Next Import
+import { useRouter } from 'next/router'
 
 // ** MUI Components
 import { CardContent } from '@mui/material'
@@ -29,7 +29,8 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 // ** Hooks
-import { useAuth } from 'src/hooks/useAuth'
+import { useAppDispatch } from '@hooks/useStore'
+import { actions as CoreAuthActions } from '@stores/auth/authReducer'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
@@ -39,6 +40,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
+import { HttpClient } from '@utils/httpClient'
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
@@ -46,17 +48,17 @@ const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
-  email: yup.string().email().required(),
+  username: yup.string().required(),
   password: yup.string().min(5).required()
 })
 
 const defaultValues = {
-  password: 'admin',
-  email: 'admin@materialize.com'
+  password: '',
+  username: ''
 }
 
 interface FormData {
-  email: string
+  username: string
   password: string
 }
 
@@ -66,7 +68,8 @@ const LoginPage = () => {
 
   // ** Hook
   const theme = useTheme()
-  const auth = useAuth()
+  const dispatch = useAppDispatch()
+  const router = useRouter()
 
   // ** Functions
   const {
@@ -74,20 +77,33 @@ const LoginPage = () => {
     setError,
     handleSubmit,
     formState: { errors }
-  } = useForm({
+  } = useForm<FormData>({
     defaultValues,
     mode: 'onBlur',
     resolver: yupResolver(schema)
   })
 
   const onSubmit = (data: FormData) => {
-    const { email, password } = data
-    auth.login({ email, password }, () => {
-      setError('email', {
-        type: 'manual',
-        message: 'Email or Password is invalid'
+    // const { username, password } = data
+    HttpClient.post('/login', data)
+      .then(async res => {
+        // window.localStorage.setItem(authConfig.storageTokenKeyName, res.data.accessToken)
+        const returnUrl = router.query.returnUrl
+
+        dispatch(CoreAuthActions.authSetToken(res))
+        await window.localStorage.setItem('userData', JSON.stringify(res.data.user_data))
+
+        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+
+        router.replace(redirectURL as string)
       })
-    })
+      .catch(err => {
+        console.log('err', err)
+        setError('username', {
+          type: 'manual',
+          message: 'Username or Password is invalid'
+        })
+      })
   }
 
   return (
@@ -178,22 +194,23 @@ const LoginPage = () => {
           <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
             <FormControl fullWidth sx={{ mb: 4 }}>
               <Controller
-                name='email'
+                name='username'
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange, onBlur } }) => (
                   <TextField
                     autoFocus
-                    label='Email'
+                    label='Username'
                     value={value}
                     onBlur={onBlur}
                     onChange={onChange}
-                    error={Boolean(errors.email)}
-                    placeholder='admin@materialize.com'
+                    error={Boolean(errors.username)}
                   />
                 )}
               />
-              {errors.email && <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>}
+              {errors.username && (
+                <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>
+              )}
             </FormControl>
             <FormControl fullWidth>
               <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)}>

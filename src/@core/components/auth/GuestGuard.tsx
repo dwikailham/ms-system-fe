@@ -5,7 +5,7 @@ import { ReactNode, ReactElement, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // ** Hooks Import
-import { useAuth } from 'src/hooks/useAuth'
+import { useAppSelector } from '@hooks/useStore'
 
 interface GuestGuardProps {
   children: ReactNode
@@ -14,21 +14,20 @@ interface GuestGuardProps {
 
 const GuestGuard = (props: GuestGuardProps) => {
   const { children, fallback } = props
-  const auth = useAuth()
   const router = useRouter()
+  const authRedux = useAppSelector(state => state.auth)
 
   useEffect(() => {
     if (!router.isReady) {
       return
     }
 
-    if (window.localStorage.getItem('userData')) {
-      router.replace('/')
+    if (authRedux.isLogin) {
+      router.replace('/home')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.route])
+  }, [authRedux.isLogin, router])
 
-  if (auth.loading || (!auth.loading && auth.user !== null)) {
+  if (authRedux.isLogin) {
     return fallback
   }
 

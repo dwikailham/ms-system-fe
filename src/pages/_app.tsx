@@ -7,24 +7,24 @@ import { Router } from 'next/router'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 
-
-
-
-
 // ** Loader Import
 import NProgress from 'nprogress'
+import { wrapper } from '@configs/stores'
+import { PersistGate } from 'redux-persist/integration/react'
+import { Provider } from 'react-redux'
 
 // ** Emotion Imports
 import { CacheProvider } from '@emotion/react'
 import type { EmotionCache } from '@emotion/cache'
 
-// ** Config Imports
+import type { DehydratedState } from '@tanstack/react-query'
 
+// ** Config Imports
 import { defaultACLObj } from 'src/configs/acl'
 import themeConfig from 'src/configs/themeConfig'
 
 // ** Fake-DB Import
-import 'src/@fake-db'
+// import 'src/@fake-db'
 
 // ** Third Party Import
 import { Toaster } from 'react-hot-toast'
@@ -63,10 +63,14 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 import '../../styles/globals.css'
 
 // ** Extend App Props with Emotion
-type ExtendedAppProps = AppProps & {
+type PageProps = {
+  dehydratedState?: DehydratedState
+}
+
+type ExtendedAppProps<P = {}> = {
   Component: NextPage
   emotionCache: EmotionCache
-}
+} & AppProps<P>
 
 type GuardProps = {
   authGuard: boolean
@@ -100,8 +104,9 @@ const Guard = ({ children, authGuard, guestGuard }: GuardProps) => {
 }
 
 // ** Configure JSS & ClassName
-const App = (props: ExtendedAppProps) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+const App = (_props: ExtendedAppProps<PageProps>) => {
+  const { Component, emotionCache = clientSideEmotionCache, pageProps } = _props
+  const { store, props } = wrapper.useWrappedStore(pageProps)
 
   // Variables
   const getLayout = Component.getLayout ?? (page => <UserLayout>{page}</UserLayout>)
@@ -115,13 +120,14 @@ const App = (props: ExtendedAppProps) => {
   const aclAbilities = Component.acl ?? defaultACLObj
 
   return (
-    
+    <Provider store={store}>
+      <PersistGate persistor={store.__PERSISTOR}></PersistGate>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>{`${themeConfig.templateName} - Material Design React Admin Template`}</title>
+          <title>{`${themeConfig.templateName} - Template`}</title>
           <meta
             name='description'
-            content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
+            content={`${themeConfig.templateName} – Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
           />
           <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
@@ -136,7 +142,7 @@ const App = (props: ExtendedAppProps) => {
                     <WindowWrapper>
                       <Guard authGuard={authGuard} guestGuard={guestGuard}>
                         <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                          {getLayout(<Component {...pageProps} />)}
+                          {getLayout(<Component {...props} />)}
                         </AclGuard>
                       </Guard>
                     </WindowWrapper>
@@ -150,7 +156,7 @@ const App = (props: ExtendedAppProps) => {
           </SettingsProvider>
         </AuthProvider>
       </CacheProvider>
-   
+    </Provider>
   )
 }
 

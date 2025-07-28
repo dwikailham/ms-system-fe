@@ -27,6 +27,24 @@
       "apexcharts/*": [
         "./node_modules/apexcharts-clevision/*"
       ],
+      "@modules/*": [
+        "./src/modules/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@stores/*": [
+        "./src/stores/*"
+      ],
+      "@configs/*": [
+        "./src/configs/*"
+      ],
+      "@middleware/*": [
+        "./src/middleware/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ]
     }
   },
   "include": [

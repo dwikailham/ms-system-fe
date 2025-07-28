@@ -1,5 +1,5 @@
 // ** React Imports
-import { createContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useState, ReactNode } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -9,6 +9,9 @@ import axios from 'axios'
 
 // ** Config
 import authConfig from 'src/configs/auth'
+import { HttpClient } from '@utils/httpClient'
+import { useAppDispatch } from '@hooks/useStore'
+import { actions as CoreAuthActions } from '@stores/auth/authReducer'
 
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
@@ -40,60 +43,20 @@ const AuthProvider = ({ children }: Props) => {
 
   // ** Hooks
   const router = useRouter()
+  const dispatch = useAppDispatch()
 
-  useEffect(() => {
-    const initAuth = async (): Promise<void> => {
-      setIsInitialized(true)
-      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-      if (storedToken) {
-        setLoading(true)
-        await axios
-          .get(authConfig.meEndpoint, {
-            headers: {
-              Authorization: storedToken
-            }
-          })
-          .then(async response => {
-            setLoading(false)
-            setUser({ ...response.data.userData })
-          })
-          .catch(() => {
-            localStorage.removeItem('userData')
-            localStorage.removeItem('refreshToken')
-            localStorage.removeItem('accessToken')
-            setUser(null)
-            setLoading(false)
-          })
-      } else {
-        setLoading(false)
-      }
-    }
-    initAuth()
-  }, [])
-
-  const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
-    axios
-      .post(authConfig.loginEndpoint, params)
+  const handleLogin = async (params: LoginParams, errorCallback?: ErrCallbackType) => {
+    HttpClient.post('/login', params)
       .then(async res => {
         window.localStorage.setItem(authConfig.storageTokenKeyName, res.data.accessToken)
-      })
-      .then(() => {
-        axios
-          .get(authConfig.meEndpoint, {
-            headers: {
-              Authorization: window.localStorage.getItem(authConfig.storageTokenKeyName)!
-            }
-          })
-          .then(async response => {
-            const returnUrl = router.query.returnUrl
+        const returnUrl = router.query.returnUrl
 
-            setUser({ ...response.data.userData })
-            await window.localStorage.setItem('userData', JSON.stringify(response.data.userData))
+        dispatch(CoreAuthActions.authSetToken(res.data))
+        await window.localStorage.setItem('userData', JSON.stringify(res.data.user_data))
 
-            const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
-            router.replace(redirectURL as string)
-          })
+        router.replace(redirectURL as string)
       })
       .catch(err => {
         if (errorCallback) errorCallback(err)
@@ -115,7 +78,7 @@ const AuthProvider = ({ children }: Props) => {
         if (res.data.error) {
           if (errorCallback) errorCallback(res.data.error)
         } else {
-          handleLogin({ email: params.email, password: params.password })
+          handleLogin({ username: params.email, password: params.password })
         }
       })
       .catch((err: { [key: string]: string }) => (errorCallback ? errorCallback(err) : null))

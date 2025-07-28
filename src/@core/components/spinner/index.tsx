@@ -87,7 +87,7 @@ const FallbackSpinner = () => {
           </linearGradient>
         </defs>
       </svg>
-      <CircularProgress disableShrink sx={{ mt: 6 }} />
+      <CircularProgress disableShrink sx={{ mt: 50 }} />
     </Box>
   )
 }

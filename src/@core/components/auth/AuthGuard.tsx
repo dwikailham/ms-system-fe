@@ -5,7 +5,7 @@ import { ReactNode, ReactElement, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // ** Hooks Import
-import { useAuth } from 'src/hooks/useAuth'
+import { useAppSelector } from '@hooks/useStore'
 
 interface AuthGuardProps {
   children: ReactNode
@@ -13,9 +13,9 @@ interface AuthGuardProps {
 }
 
 const AuthGuard = (props: AuthGuardProps) => {
-  const { children, fallback } = props
-  const auth = useAuth()
+  const { children } = props
   const router = useRouter()
+  const authRedux = useAppSelector(state => state.auth)
 
   useEffect(
     () => {
@@ -23,7 +23,7 @@ const AuthGuard = (props: AuthGuardProps) => {
         return
       }
 
-      if (auth.user === null && !window.localStorage.getItem('userData')) {
+      if (!authRedux.isLogin) {
         if (router.asPath !== '/') {
           router.replace({
             pathname: '/login',
@@ -37,10 +37,6 @@ const AuthGuard = (props: AuthGuardProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [router.route]
   )
-
-  if (auth.loading || auth.user === null) {
-    return fallback
-  }
 
   return <>{children}</>
 }

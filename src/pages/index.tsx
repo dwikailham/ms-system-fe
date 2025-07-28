@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import Spinner from 'src/@core/components/spinner'
 
 // ** Hook Imports
-import { useAuth } from 'src/hooks/useAuth'
+import { useAppSelector } from '@hooks/useStore'
 
 /**
  *  Set Home URL based on User Roles
@@ -20,22 +20,21 @@ export const getHomeRoute = (role: string) => {
 
 const Home = () => {
   // ** Hooks
-  const auth = useAuth()
-  const router = useRouter()
 
+  const router = useRouter()
+  const authRedux = useAppSelector(state => state.auth)
   useEffect(() => {
     if (!router.isReady) {
       return
     }
 
-    if (auth.user && auth.user.role) {
-      const homeRoute = getHomeRoute(auth.user.role)
+    if (authRedux.isLogin) {
+      const homeRoute = getHomeRoute('admin')
 
       // Redirect user to Home URL
       router.replace(homeRoute)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [authRedux.isLogin, router])
 
   return <Spinner />
 }

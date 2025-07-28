@@ -17,8 +17,9 @@ import Typography from '@mui/material/Typography'
 // ** Icons Imports
 import LogoutVariant from 'mdi-material-ui/LogoutVariant'
 
-// ** Context
-import { useAuth } from 'src/hooks/useAuth'
+// ** Hooks
+import { useAppDispatch, useAppSelector } from '@hooks/useStore'
+import { actions as CoreAuthActions } from '@stores/auth/authReducer'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
@@ -45,7 +46,9 @@ const UserDropdown = (props: Props) => {
 
   // ** Hooks
   const router = useRouter()
-  const { logout } = useAuth()
+  const dispatch = useAppDispatch()
+  const authRedux = useAppSelector(state => state.auth)
+  const { name, role } = authRedux.user_data
 
   // ** Vars
   const { direction } = settings
@@ -62,7 +65,9 @@ const UserDropdown = (props: Props) => {
   }
 
   const handleLogout = () => {
-    logout()
+    dispatch(CoreAuthActions.authLogout({}))
+    handleDropdownClose()
+    router.push('/login')
     handleDropdownClose()
   }
 
@@ -119,9 +124,9 @@ const UserDropdown = (props: Props) => {
                 flexDirection: 'column'
               }}
             >
-              <Typography sx={{ fontWeight: 600 }}>John Doe</Typography>
+              <Typography sx={{ fontWeight: 600 }}>{name || ''}</Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                Admin
+                {role || ''}
               </Typography>
             </Box>
           </Box>
