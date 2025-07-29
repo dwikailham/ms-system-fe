@@ -22,7 +22,6 @@ const Page = () => {
 
   /** States */
   const [globalFilter, setGlobalFilter] = useState<string>()
-  console.log('DATA', globalFilter)
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10
