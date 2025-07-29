@@ -13,7 +13,8 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 
 export const columns = (
   pagination: MRT_PaginationState,
-  handleOpenDelete: (row: TListUser) => void
+  handleOpenDelete: (row: TListUser) => void,
+  handleOpenEdit: (row: TListUser) => void
 ): MRT_ColumnDef<TListUser>[] => [
   {
     header: 'No',
@@ -47,7 +48,7 @@ export const columns = (
     Cell: ({ row }) => {
       const role = row.original.role || ''
 
-      const icon = role === 'admin' ? <AdminPanelSettings color='primary' /> : <Person color='success' />
+      const icon = role === 'admin' ? <AdminPanelSettings color='primary' /> : <Person color='info' />
 
       return (
         <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
@@ -87,7 +88,7 @@ export const columns = (
           <IconButton onClick={() => handleOpenDelete(currentRow)}>
             <Delete />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={() => handleOpenEdit(currentRow)}>
             <Edit />
           </IconButton>
         </Box>

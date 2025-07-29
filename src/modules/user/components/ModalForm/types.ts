@@ -1,11 +1,12 @@
-import { TPayloadCreate } from '@modules/user/types'
+import { TPayloadCreate, TListUser, TPayloadUpdate } from '@modules/user/types'
 
 export type TProps = {
   open: boolean
   toggle: () => void
   type: 'ADD' | 'EDIT'
   isLoading: boolean
-  onSubmit: (payload: TPayloadCreate) => void
+  onSubmit: (payload: TPayloadCreate, payloadUpdate: TPayloadUpdate) => void
+  selectedRow: TListUser
 }
 
 export type TForm = {

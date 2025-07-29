@@ -32,3 +32,8 @@ export type TPayloadCreate = {
   password: string
   role: string
 }
+
+export type TPayloadUpdate = {
+  role: string
+  is_active: boolean
+}
