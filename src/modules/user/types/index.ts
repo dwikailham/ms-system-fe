@@ -16,6 +16,12 @@ export type TApiListPagination = {
   }
 }
 
+export type TQueryParams = {
+  page: number
+  limit: number
+  search?: string
+}
+
 export interface IApiResponseListUser extends TApiListPagination {
   data: Array<TListUser>
 }

@@ -1,12 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
 import { HttpClient } from '@utils/httpClient'
-import { IApiResponseListUser } from '../types'
+import { IApiResponseListUser, TQueryParams } from '../types'
 
-const useGetListUser = () => {
+const useGetListUser = (props: TQueryParams) => {
+  const { limit, page, search } = props
+
+  const params = {
+    limit,
+    search,
+    page: page + 1
+  }
+
   return useQuery<IApiResponseListUser>({
-    queryKey: ['GET-LIST-USER'],
+    queryKey: ['GET-LIST-USER', limit, page],
     queryFn: async () => {
-      const response = await HttpClient.get(`/users`)
+      const response = await HttpClient.get(`/users`, { params })
 
       return response.data
     },
