@@ -27,7 +27,7 @@ export const columns = (pagination: MRT_PaginationState): MRT_ColumnDef<TListUse
       return (
         <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
           <CustomAvatar variant='rounded' skin='light-static'>
-            {getInitials(username)}
+            {getInitials(name.charAt(0))}
           </CustomAvatar>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography fontWeight={500}>{`${name}`}</Typography>
