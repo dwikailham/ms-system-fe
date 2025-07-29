@@ -19,3 +19,10 @@ export type TApiListPagination = {
 export interface IApiResponseListUser extends TApiListPagination {
   data: Array<TListUser>
 }
+
+export type TPayloadCreate = {
+  name: string
+  username: string
+  password: string
+  role: string
+}
