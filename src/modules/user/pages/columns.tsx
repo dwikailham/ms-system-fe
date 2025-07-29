@@ -11,7 +11,10 @@ import { getInitials, formatDate } from '@utils/commons'
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
-export const columns = (pagination: MRT_PaginationState): MRT_ColumnDef<TListUser>[] => [
+export const columns = (
+  pagination: MRT_PaginationState,
+  handleOpenDelete: (row: TListUser) => void
+): MRT_ColumnDef<TListUser>[] => [
   {
     header: 'No',
     Cell: ({ row }) => row.index + 1 + pagination.pageIndex * pagination.pageSize,
@@ -76,10 +79,12 @@ export const columns = (pagination: MRT_PaginationState): MRT_ColumnDef<TListUse
   {
     header: 'Action',
     size: 10,
-    Cell: () => {
+    Cell: ({ row }) => {
+      const currentRow = row.original
+
       return (
         <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-          <IconButton>
+          <IconButton onClick={() => handleOpenDelete(currentRow)}>
             <Delete />
           </IconButton>
           <IconButton>

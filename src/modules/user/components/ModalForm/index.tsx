@@ -163,6 +163,7 @@ const ModalForm = (props: TProps) => {
           open={openConfirmation}
           description='Apakah anda yakin untuk menambahkan Akun tersebut ? '
           toggle={toggleConfirmation}
+          type='warning'
         />
       )}
     </Dialog>

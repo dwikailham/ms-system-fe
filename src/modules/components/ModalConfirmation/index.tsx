@@ -1,18 +1,29 @@
 /** React Imports */
-import React from 'react'
+import React, { useCallback } from 'react'
 
 // ** MUI Imports
 import { Button, Dialog, DialogContent, DialogActions, Typography } from '@mui/material'
-import { Warning } from '@mui/icons-material'
+import { Warning, Report } from '@mui/icons-material'
 
 /** Type Imports */
 import { TProps } from './types'
 
 const ModalConfirmation = (props: TProps) => {
   /** Props */
-  const { open, toggle, onSubmit, description } = props
+  const { open, toggle, onSubmit, description, isLoading = false, type } = props
 
   /** Functions */
+  const handleIconRender = useCallback(() => {
+    switch (type) {
+      case 'error':
+        return <Report color='error' sx={{ width: 66, height: 66 }} />
+      case 'warning':
+        return <Warning color='warning' sx={{ width: 66, height: 66 }} />
+
+      default:
+        return <></>
+    }
+  }, [type])
 
   return (
     <Dialog
@@ -23,18 +34,18 @@ const ModalConfirmation = (props: TProps) => {
       aria-describedby='alert-dialog-description'
     >
       <DialogContent sx={{ textAlign: 'center' }}>
-        <Warning color='warning' sx={{ width: 66, height: 66 }} />
+        {handleIconRender()}
         <Typography variant='h6' gutterBottom>
           Confirmation!
         </Typography>
         <Typography>{description}</Typography>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'center' }}>
-        <Button onClick={toggle} variant='outlined'>
+        <Button disabled={isLoading} onClick={toggle} variant='outlined'>
           Batal
         </Button>
-        <Button onClick={onSubmit} variant='contained'>
-          Ya, Tambah
+        <Button disabled={isLoading} onClick={onSubmit} variant='contained'>
+          Ya, Confirm
         </Button>
       </DialogActions>
     </Dialog>

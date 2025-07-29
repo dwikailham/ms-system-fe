@@ -3,4 +3,6 @@ export type TProps = {
   toggle: () => void
   onSubmit: () => void
   description: string
+  type: 'warning' | 'error'
+  isLoading?: boolean
 }

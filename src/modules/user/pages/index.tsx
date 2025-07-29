@@ -6,26 +6,35 @@ import { Card, Grid, CardHeader, Button, InputAdornment, IconButton } from '@mui
 import { Add, Clear } from '@mui/icons-material'
 
 /** Component Imports */
-import { useGetListUser, usePostCreate } from '../hooks'
+import { useGetListUser, usePostCreate, useDeleteUser } from '../hooks'
 import { columns } from './columns'
 import { ModalForm } from '../components'
 import { useAppDispatch } from '@hooks/useStore'
 import { actions as utilActions } from '@stores/utils'
+import { ModalConfirmation } from '@modules/components'
 
 /** Third Party Imports */
 import { MaterialReactTable, MRT_PaginationState } from 'material-react-table'
+
+/** Type Imports */
 import { TPayloadCreate } from '../types'
+import { TListUser } from '../types'
 
 const Page = () => {
   /** Hooks */
   const dispatch = useAppDispatch()
 
   /** States */
+  const [selectedRow, setSelectedRow] = useState<{ id: string; name: string }>({
+    id: '',
+    name: ''
+  })
   const [globalFilter, setGlobalFilter] = useState<string>()
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10
   })
+  const [isOpenConfirmation, setIsOpenConfirmation] = useState<boolean>(false)
   const [modalFormState, setModalFormState] = useState<{ open: boolean; type: 'ADD' | 'EDIT' }>({
     open: false,
     type: 'ADD'
@@ -42,6 +51,7 @@ const Page = () => {
 
   /** Mutations */
   const { mutateAsync: mutationCreate, isPending: isLoadingCreate } = usePostCreate()
+  const { mutateAsync: mutationDelete, isPending: isLoadingDelete } = useDeleteUser()
 
   /** Side Effects */
   useEffect(() => {
@@ -58,6 +68,22 @@ const Page = () => {
   /** Functions */
   const handleChangePagination = useCallback((value: any) => {
     setPagination(value)
+  }, [])
+
+  const handleOpenDelete = useCallback((row: TListUser) => {
+    setSelectedRow({
+      id: row.uuid,
+      name: row.name
+    })
+    setIsOpenConfirmation(true)
+  }, [])
+
+  const handleClose = useCallback(() => {
+    setSelectedRow({
+      id: '',
+      name: ''
+    })
+    setIsOpenConfirmation(false)
   }, [])
 
   const handleOpenModal = useCallback((type: 'ADD' | 'EDIT') => {
@@ -91,6 +117,29 @@ const Page = () => {
     [dispatch, handleCloseModal, mutationCreate, refetch]
   )
 
+  const onDeleteUser = useCallback(() => {
+    const payload = {
+      id: selectedRow.id
+    }
+    mutationDelete(
+      { ...payload },
+      {
+        onSuccess(data) {
+          refetch()
+          if (data) {
+            handleClose()
+            dispatch(
+              utilActions.UtilsShowAlert({
+                msg: data.message || 'DATA DELETED',
+                type: 'success'
+              })
+            )
+          }
+        }
+      }
+    )
+  }, [dispatch, handleClose, mutationDelete, refetch, selectedRow.id])
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -105,7 +154,7 @@ const Page = () => {
           ></CardHeader>
           <MaterialReactTable
             data={queryUser?.data || []}
-            columns={columns(pagination)}
+            columns={columns(pagination, handleOpenDelete)}
             initialState={{ density: 'compact' }}
             enableColumnActions={false}
             enableColumnFilters={false}
@@ -157,6 +206,16 @@ const Page = () => {
           type={modalFormState.type}
           isLoading={isLoadingCreate}
           onSubmit={onCreateUser}
+        />
+      )}
+      {isOpenConfirmation && (
+        <ModalConfirmation
+          description={`Apakah anda yakin akan menghapus akun ${selectedRow.name} ?`}
+          onSubmit={onDeleteUser}
+          open={isOpenConfirmation}
+          toggle={handleClose}
+          isLoading={isLoadingDelete}
+          type='error'
         />
       )}
     </Grid>
