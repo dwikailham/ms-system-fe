@@ -23,10 +23,11 @@ export const columns = (pagination: MRT_PaginationState): MRT_ColumnDef<TListUse
     Cell: ({ row }) => {
       const name = row.original.name || ''
       const username = row.original.username || ''
+      const colors = ['primary', 'success', 'warning', 'info', 'error']
 
       return (
         <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-          <CustomAvatar variant='rounded' skin='light-static'>
+          <CustomAvatar variant='rounded' color={(colors[row?.index] as any) || 'error'} skin='light-static'>
             {getInitials(name.charAt(0))}
           </CustomAvatar>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
