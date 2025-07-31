@@ -8,7 +8,7 @@ type TProps = {
 const useDeleteUser = () => {
   return useMutation({
     mutationFn: async (payload: TProps) => {
-      const { data } = await HttpClient.delete(`/users/${payload.id}`)
+      const { data } = await HttpClient.delete(`/users/delete/${payload.id}`)
 
       return data
     }

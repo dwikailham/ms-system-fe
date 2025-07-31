@@ -9,7 +9,7 @@ type TProps = {
 const usePatchUpdate = (props: TProps) => {
   return useMutation({
     mutationFn: async (payload: TPayloadUpdate) => {
-      const { data } = await HttpClient.patch(`/users/${props.id}`, payload)
+      const { data } = await HttpClient.patch(`/users/update/${props.id}`, payload)
 
       return data
     }
