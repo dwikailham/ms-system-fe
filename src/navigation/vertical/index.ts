@@ -2,7 +2,7 @@
 import HomeOutline from 'mdi-material-ui/HomeOutline'
 import EmailOutline from 'mdi-material-ui/EmailOutline'
 import ShieldOutline from 'mdi-material-ui/ShieldOutline'
-import { Source } from '@mui/icons-material'
+import { Source, HowToReg } from '@mui/icons-material'
 
 // ** Type import
 import { VerticalNavItemsType } from 'src/@core/layouts/types'
@@ -31,6 +31,11 @@ const navigation = (): VerticalNavItemsType => {
           path: '/pegawai'
         }
       ]
+    },
+    {
+      title: 'Absensi',
+      icon: HowToReg,
+      path: '/absensi'
     },
     {
       title: 'Second Page',
