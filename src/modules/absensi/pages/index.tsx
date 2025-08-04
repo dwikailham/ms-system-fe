@@ -1,9 +1,9 @@
 /** React Imports */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 // ** MUI Imports
-import { Card, Grid, CardHeader, Button, InputAdornment, IconButton } from '@mui/material'
-import { Add, Clear } from '@mui/icons-material'
+import { Card, Grid, CardHeader, Button } from '@mui/material'
+import { Add } from '@mui/icons-material'
 
 /** Component Imports */
 import { useGetList } from '../hooks'
@@ -16,7 +16,6 @@ import { MaterialReactTable, MRT_PaginationState } from 'material-react-table'
 
 const Page = () => {
   /** States */
-  const [globalFilter, setGlobalFilter] = useState<string>()
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10
@@ -27,21 +26,8 @@ const Page = () => {
     data: queryUser,
     isLoading,
     isFetching,
-    isError,
-    refetch
-  } = useGetList({ limit: pagination.pageSize, page: pagination.pageIndex, search: globalFilter })
-
-  /** Side Effects */
-  useEffect(() => {
-    if (globalFilter === '' || globalFilter) {
-      const delayDebounceFn = setTimeout(() => {
-        refetch()
-      }, 1500)
-
-      return () => clearTimeout(delayDebounceFn)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalFilter])
+    isError
+  } = useGetList({ limit: pagination.pageSize, page: pagination.pageIndex })
 
   /** Functions */
   const handleChangePagination = useCallback((value: any) => {
@@ -69,6 +55,7 @@ const Page = () => {
             enableHiding={false}
             enableDensityToggle={false}
             enableSorting={false}
+            enableGlobalFilter={false}
             manualFiltering
             enableStickyHeader
             enableStickyFooter
@@ -76,32 +63,12 @@ const Page = () => {
             mrtTheme={theme => ({
               baseBackgroundColor: theme.palette.background.paper //change default background color
             })}
-            muiSearchTextFieldProps={{
-              placeholder: `Search`,
-              sx: { minWidth: '300px' },
-              onChange: e => {
-                setGlobalFilter(e.target.value)
-              },
-              variant: 'outlined',
-              InputProps: {
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    {globalFilter && (
-                      <IconButton onClick={() => setGlobalFilter('')}>
-                        <Clear />
-                      </IconButton>
-                    )}
-                  </InputAdornment>
-                )
-              }
-            }}
             onPaginationChange={handleChangePagination}
             state={{
               isLoading,
               pagination,
               showAlertBanner: isError,
-              showProgressBars: isFetching,
-              globalFilter
+              showProgressBars: isFetching
             }}
             rowCount={queryUser?.meta.totalItems || 0}
           />

@@ -3,11 +3,10 @@ import { HttpClient } from '@utils/httpClient'
 import { IApiResponseListPresence, TQueryParams } from '../types'
 
 const useGetList = (props: TQueryParams) => {
-  const { limit, page, search } = props
+  const { limit, page } = props
 
   const params = {
     limit,
-    search,
     page: page + 1
   }
 
