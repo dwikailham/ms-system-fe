@@ -128,7 +128,7 @@ const App = (_props: ExtendedAppProps<PageProps>) => {
       <PersistGate persistor={store.__PERSISTOR}></PersistGate>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>{`${themeConfig.templateName} - Template`}</title>
+          <title>{`${themeConfig.templateName}`}</title>
           <meta
             name='description'
             content={`${themeConfig.templateName} – Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
