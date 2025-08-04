@@ -1,6 +1,6 @@
 /** MUI Imports */
 import { Box, Typography, IconButton } from '@mui/material'
-import { AdminPanelSettings, Person, Edit, Delete } from '@mui/icons-material'
+import { AdminPanelSettings, Person, Edit } from '@mui/icons-material'
 
 /** Third Party Imports */
 import { type MRT_ColumnDef, type MRT_PaginationState } from 'material-react-table'
@@ -85,9 +85,9 @@ export const columns = (
 
       return (
         <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-          <IconButton onClick={() => handleOpenDelete(currentRow)}>
+          {/* <IconButton onClick={() => handleOpenDelete(currentRow)}>
             <Delete />
-          </IconButton>
+          </IconButton> */}
           <IconButton onClick={() => handleOpenEdit(currentRow)}>
             <Edit />
           </IconButton>
