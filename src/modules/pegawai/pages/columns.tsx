@@ -5,6 +5,7 @@ import { Edit } from '@mui/icons-material'
 /** Third Party Imports */
 import { type MRT_ColumnDef, type MRT_PaginationState } from 'material-react-table'
 import { TListEmployee } from '../types'
+import { numericFormatter } from 'react-number-format'
 
 /** Component Imports */
 import CustomChip from 'src/@core/components/mui/chip'
@@ -28,11 +29,15 @@ export const columns = (
   },
   {
     accessorKey: 'work_placement.name',
-    header: 'Tempat Kerja',
+    header: 'Tempat Kerja'
+  },
+  {
+    accessorKey: 'salary',
+    header: 'Gaji per Hari',
     Cell: ({ row }) => {
-      const workPlacement = row.original.work_placement.name
+      const amount = row.original.salary
 
-      return <CustomChip skin='light' label={workPlacement} color={'secondary'} />
+      return `Rp ${numericFormatter(amount.toString(), { thousandSeparator: '.' })}`
     }
   },
   {

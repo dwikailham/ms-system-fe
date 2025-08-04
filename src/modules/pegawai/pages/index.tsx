@@ -8,7 +8,7 @@ import { Add, Clear } from '@mui/icons-material'
 /** Component Imports */
 import { useGetList, usePatchData, usePostData } from '../hooks'
 import { columns } from './columns'
-// import { ModalForm } from '../components'
+import { ModalForm } from '../components'
 import { actions as utilActions } from '@stores/utils'
 import { useAppDispatch } from '@hooks/useStore'
 
@@ -199,7 +199,7 @@ const Page = () => {
           />
         </Card>
       </Grid>
-      {/* {modalFormState.open && (
+      {modalFormState.open && (
         <ModalForm
           open={modalFormState.open}
           toggle={handleCloseModal}
@@ -208,7 +208,7 @@ const Page = () => {
           onSubmit={onSubmitData}
           selectedRow={selectedRow}
         />
-      )} */}
+      )}
     </Grid>
   )
 }
