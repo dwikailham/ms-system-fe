@@ -6,35 +6,39 @@ import { Card, Grid, CardHeader, Button, InputAdornment, IconButton } from '@mui
 import { Add, Clear } from '@mui/icons-material'
 
 /** Component Imports */
-import { useGetList } from '../hooks'
+import { useGetList, usePatchData, usePostData } from '../hooks'
 import { columns } from './columns'
-
-// import { useAppDispatch } from '@hooks/useStore'
+import { ModalForm } from '../components'
+import { actions as utilActions } from '@stores/utils'
+import { useAppDispatch } from '@hooks/useStore'
 
 /** Third Party Imports */
 import { MaterialReactTable, MRT_PaginationState } from 'material-react-table'
 
 /** Type Imports */
-// import { TListWorkPlacement } from '../types'
+import { TListWorkPlacement, TPayloadCreate, TPayloadUpdate } from '../types'
 
-// const DEFAULT_VALUE_ROW = {
-//   uuid: '',
-//   name: '',
-//   createdAt: '',
-//   is_active: false,
-//   role: '',
-//   username: ''
-// }
+const DEFAULT_VALUE_ROW: TListWorkPlacement = {
+  uuid: '',
+  name: '',
+  is_active: false,
+  address: ''
+}
 
 const Page = () => {
   /** Hooks */
-  //   const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   /** States */
   const [globalFilter, setGlobalFilter] = useState<string>()
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10
+  })
+  const [selectedRow, setSelectedRow] = useState<TListWorkPlacement>(DEFAULT_VALUE_ROW)
+  const [modalFormState, setModalFormState] = useState<{ open: boolean; type: 'ADD' | 'EDIT' }>({
+    open: false,
+    type: 'ADD'
   })
 
   /** Query */
@@ -47,6 +51,8 @@ const Page = () => {
   } = useGetList({ limit: pagination.pageSize, page: pagination.pageIndex, search: globalFilter })
 
   /** Mutations */
+  const { mutateAsync: mutationCreate, isPending: isLoadingCreate } = usePostData()
+  const { mutateAsync: mutationUpdate, isPending: isLoadingUpdate } = usePatchData({ id: selectedRow.uuid })
 
   /** Side Effects */
   useEffect(() => {
@@ -65,6 +71,63 @@ const Page = () => {
     setPagination(value)
   }, [])
 
+  const handleOpenEdit = useCallback((row: TListWorkPlacement) => {
+    setSelectedRow(row)
+    setModalFormState({ type: 'EDIT', open: true })
+  }, [])
+
+  const handleOpenModal = useCallback((type: 'ADD' | 'EDIT') => {
+    setModalFormState({ type, open: true })
+  }, [])
+
+  const handleCloseModal = useCallback(() => {
+    setModalFormState({ type: 'ADD', open: false })
+    setSelectedRow(DEFAULT_VALUE_ROW)
+  }, [])
+
+  const onSubmitData = useCallback(
+    (payload: TPayloadCreate, payloadUpdate: TPayloadUpdate) => {
+      if (modalFormState.type === 'ADD') {
+        mutationCreate(
+          { ...payload },
+          {
+            onSuccess(data) {
+              refetch()
+              if (data) {
+                handleCloseModal()
+                dispatch(
+                  utilActions.UtilsShowAlert({
+                    msg: data.message || 'DATA SUBMITTED',
+                    type: 'success'
+                  })
+                )
+              }
+            }
+          }
+        )
+      } else {
+        mutationUpdate(
+          { ...payloadUpdate },
+          {
+            onSuccess(data) {
+              refetch()
+              if (data) {
+                handleCloseModal()
+                dispatch(
+                  utilActions.UtilsShowAlert({
+                    msg: data.message || 'DATA SUBMITTED',
+                    type: 'success'
+                  })
+                )
+              }
+            }
+          }
+        )
+      }
+    },
+    [dispatch, handleCloseModal, modalFormState.type, mutationCreate, mutationUpdate, refetch]
+  )
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -76,7 +139,7 @@ const Page = () => {
                 variant='contained'
                 color='primary'
                 onClick={() => {
-                  console.log('clicked')
+                  handleOpenModal('ADD')
                 }}
                 startIcon={<Add />}
               >
@@ -86,9 +149,7 @@ const Page = () => {
           ></CardHeader>
           <MaterialReactTable
             data={queryUser?.data || []}
-            columns={columns(pagination, () => {
-              console.log('')
-            })}
+            columns={columns(pagination, handleOpenEdit)}
             initialState={{ density: 'compact' }}
             enableColumnActions={false}
             enableColumnFilters={false}
@@ -133,6 +194,16 @@ const Page = () => {
           />
         </Card>
       </Grid>
+      {modalFormState.open && (
+        <ModalForm
+          open={modalFormState.open}
+          toggle={handleCloseModal}
+          type={modalFormState.type}
+          isLoading={isLoadingCreate || isLoadingUpdate}
+          onSubmit={onSubmitData}
+          selectedRow={selectedRow}
+        />
+      )}
     </Grid>
   )
 }
