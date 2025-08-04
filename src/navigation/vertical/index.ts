@@ -21,6 +21,10 @@ const navigation = (): VerticalNavItemsType => {
         {
           title: 'User',
           path: '/user'
+        },
+        {
+          title: 'Tempat Kerja',
+          path: '/tempat-kerja'
         }
       ]
     },
