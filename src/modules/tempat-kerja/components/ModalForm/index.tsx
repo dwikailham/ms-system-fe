@@ -65,8 +65,6 @@ const ModalForm = (props: TProps) => {
 
   const watchState = watch()
 
-  console.log('SELECTED ROW', selectedRow)
-
   /** Side Effects */
   useEffect(() => {
     if (open && isEditForm) {
@@ -100,8 +98,6 @@ const ModalForm = (props: TProps) => {
     },
     [onSubmit, toggleConfirmation]
   )
-
-  console.log('CEK VALUE', watchState.is_active)
 
   return (
     <Dialog
