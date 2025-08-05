@@ -9,7 +9,10 @@ import { TListPresence } from '../types'
 /** Component Imports */
 import { formatDate } from '@utils/commons'
 
-export const columns = (pagination: MRT_PaginationState): MRT_ColumnDef<TListPresence>[] => [
+export const columns = (
+  pagination: MRT_PaginationState,
+  handleRedirect: (row: TListPresence) => void
+): MRT_ColumnDef<TListPresence>[] => [
   {
     header: 'No',
     Cell: ({ row }) => row.index + 1 + pagination.pageIndex * pagination.pageSize,
@@ -41,12 +44,12 @@ export const columns = (pagination: MRT_PaginationState): MRT_ColumnDef<TListPre
   {
     header: 'Action',
     size: 10,
-    Cell: () => {
+    Cell: ({ row }) => {
       return (
         <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
           <IconButton
             onClick={() => {
-              console
+              handleRedirect(row.original)
             }}
           >
             <Edit />

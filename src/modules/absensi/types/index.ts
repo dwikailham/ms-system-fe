@@ -55,3 +55,13 @@ export type TForm = {
     attendance: TAutoCompleteField | null
   }>
 }
+
+export type TApiDetailPresence = {
+  uuid: string
+  date: string
+  work_placement: {
+    name: string
+    id: string
+  }
+  employees: Array<{ id: string; name: string; notes: string; attendance: string }>
+}

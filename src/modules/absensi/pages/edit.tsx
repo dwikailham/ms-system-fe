@@ -1,28 +1,38 @@
 /** React Imports */
 import React, { useCallback } from 'react'
 
-/** Next Imports */
+/** Next Router */
 import { useRouter } from 'next/router'
 
 // ** MUI Imports
 import { Card, Grid, CardHeader, CardContent } from '@mui/material'
 
 /** Component Imports */
-import { usePostAttendance } from '../hooks'
+import { useGetDetail, usePatchData } from '../hooks'
+import { FormController } from '@modules/absensi/components'
 import { actions as utilActions } from '@stores/utils'
 import { useAppDispatch } from '@hooks/useStore'
-import { FormController } from '@modules/absensi/components'
 
 /** Type Imports */
 import { TForm, TPayloadCreate } from '../types'
 
-const Page = () => {
+type TProps = {
+  id: string
+}
+
+const Page = (props: TProps) => {
   /** Hooks */
   const dispatch = useAppDispatch()
   const router = useRouter()
 
+  /** Props */
+  const { id } = props
+
+  /** Queries */
+  const { data: queryDetail } = useGetDetail({ presence_id: id })
+
   /** Mutations */
-  const { mutateAsync: mutationsSubmit, isPending: isLoadingSubmit } = usePostAttendance()
+  const { mutateAsync: mutationsSubmit, isPending: isLoadingSubmit } = usePatchData({ id })
 
   /** Functions */
   const onSubmit = useCallback(
@@ -63,9 +73,9 @@ const Page = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Kehadiran Pegawai'></CardHeader>
+          <CardHeader title='Edit Kehadiran Pegawai'></CardHeader>
           <CardContent>
-            <FormController onSubmit={onSubmit} isLoading={isLoadingSubmit} dataDetail={null} />
+            <FormController onSubmit={onSubmit} isLoading={isLoadingSubmit} isEdit dataDetail={queryDetail || null} />
           </CardContent>
         </Card>
       </Grid>

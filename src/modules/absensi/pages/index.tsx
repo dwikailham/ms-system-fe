@@ -14,6 +14,7 @@ import { columns } from './columns'
 
 /** Third Party Imports */
 import { MaterialReactTable, MRT_PaginationState } from 'material-react-table'
+import { TListPresence } from '../types'
 
 /** Type Imports */
 
@@ -40,6 +41,13 @@ const Page = () => {
     setPagination(value)
   }, [])
 
+  const handleRedirect = useCallback(
+    (row: TListPresence) => {
+      router.push(`/absensi/edit/${row.uuid}`)
+    },
+    [router]
+  )
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -59,7 +67,7 @@ const Page = () => {
           ></CardHeader>
           <MaterialReactTable
             data={queryUser?.data || []}
-            columns={columns(pagination)}
+            columns={columns(pagination, handleRedirect)}
             initialState={{ density: 'compact' }}
             enableColumnActions={false}
             enableColumnFilters={false}
