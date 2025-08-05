@@ -4,6 +4,9 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 // ** MUI Imports
 import { Grid, Autocomplete, TextField, Typography, Box, Button } from '@mui/material'
 
+/** Next Imports */
+import { useRouter } from 'next/router'
+
 /** Component Imports */
 import { useGetList } from '@modules/tempat-kerja/hooks'
 import { useGetEmployeeByWorkId } from '../../hooks'
@@ -45,6 +48,9 @@ type TProps = {
 }
 
 const Page = (props: TProps) => {
+  /** Hooks */
+  const router = useRouter()
+
   /** Props */
   const { onSubmit, isLoading, isEdit = false, dataDetail } = props
 
@@ -245,7 +251,7 @@ const Page = (props: TProps) => {
             justifyContent: 'end'
           }}
         >
-          <Button variant='outlined' color='secondary'>
+          <Button variant='outlined' color='secondary' onClick={() => router.back()}>
             Kembali
           </Button>
           <Button onClick={handleSubmit(onToggleConfirmation)} variant='contained'>
