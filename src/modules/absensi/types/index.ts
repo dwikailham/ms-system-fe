@@ -1,3 +1,5 @@
+export type TAutoCompleteField = { value: string; label: string }
+
 export type TListPresence = {
   uuid: string
   date: string
@@ -31,6 +33,25 @@ export type TPayloadCreate = {
   employees: Array<{
     employee_id: string
     notes: string
-    attendance: 'HADIR' | 'TIDAK_HADIR' | 'IZIN' | 'SAKIT'
+    attendance: string
+  }>
+}
+
+export type IApiResponseEmployee = Array<{
+  uuid: string
+  name: string
+  work_placement: {
+    name: string
+  }
+}>
+
+export type TForm = {
+  date: string
+  work_placement: TAutoCompleteField | null
+  employees: Array<{
+    employee_id: string
+    name: string
+    notes: string
+    attendance: TAutoCompleteField | null
   }>
 }

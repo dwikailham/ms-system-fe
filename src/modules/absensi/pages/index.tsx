@@ -5,6 +5,9 @@ import React, { useCallback, useState } from 'react'
 import { Card, Grid, CardHeader, Button } from '@mui/material'
 import { Add } from '@mui/icons-material'
 
+/** Next Imports */
+import { useRouter } from 'next/router'
+
 /** Component Imports */
 import { useGetList } from '../hooks'
 import { columns } from './columns'
@@ -15,6 +18,9 @@ import { MaterialReactTable, MRT_PaginationState } from 'material-react-table'
 /** Type Imports */
 
 const Page = () => {
+  /** Hooks */
+  const router = useRouter()
+
   /** States */
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
@@ -41,7 +47,12 @@ const Page = () => {
           <CardHeader
             title='Absensi Pegawai'
             action={
-              <Button variant='contained' color='primary' startIcon={<Add />}>
+              <Button
+                variant='contained'
+                onClick={() => router.push('/absensi/add')}
+                color='primary'
+                startIcon={<Add />}
+              >
                 Action Kehadiran
               </Button>
             }
