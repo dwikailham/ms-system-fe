@@ -1,14 +1,19 @@
 /** React Imports */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
+/** Next Imports */
+import { useRouter } from 'next/router'
+
 // ** MUI Imports
 import { Card, Grid, CardHeader, CardContent, Autocomplete, TextField, Typography, Button, Box } from '@mui/material'
 
 /** Component Imports */
 import { useGetList } from '@modules/tempat-kerja/hooks'
-import { useGetEmployeeByWorkId } from '../hooks'
+import { useGetEmployeeByWorkId, usePostAttendance } from '../hooks'
 import { columnsEmployee } from './columnsEmployee'
 import { ModalConfirmation } from '@modules/components'
+import { actions as utilActions } from '@stores/utils'
+import { useAppDispatch } from '@hooks/useStore'
 
 /** Third Party Imports */
 import * as yup from 'yup'
@@ -38,6 +43,10 @@ const DEFAULT_VALUES: TForm = {
 }
 
 const Page = () => {
+  /** Hooks */
+  const dispatch = useAppDispatch()
+  const router = useRouter()
+
   /** States */
   const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
 
@@ -60,6 +69,9 @@ const Page = () => {
   const { data: queryEmployee, isSuccess: isSuccessEmployee } = useGetEmployeeByWorkId({
     workPlacementId: watchState.work_placement?.value || ''
   })
+
+  /** Mutations */
+  const { mutateAsync: mutationsSubmit, isPending: isLoadingSubmit } = usePostAttendance()
 
   /** Vars */
   const optionsWorkPlacement = useMemo(() => {
@@ -100,19 +112,38 @@ const Page = () => {
   /** Functions */
   const onToggleConfirmation = useCallback(() => setIsOpenConfirmation(prev => !prev), [])
 
-  const onSubmit = useCallback((val: TForm) => {
-    const payload: TPayloadCreate = {
-      date: val.date,
-      work_placement_id: val.work_placement?.value || '',
-      employees: val.employees.map(el => ({
-        attendance: el.attendance?.value || '',
-        employee_id: el.employee_id,
-        notes: el.notes
-      }))
-    }
+  const onSubmit = useCallback(
+    (val: TForm) => {
+      const payload: TPayloadCreate = {
+        date: val.date,
+        work_placement_id: val.work_placement?.value || '',
+        employees: val.employees.map(el => ({
+          attendance: el.attendance?.value || '',
+          employee_id: el.employee_id,
+          notes: el.notes
+        }))
+      }
 
-    console.log('PAYLOAD', payload)
-  }, [])
+      mutationsSubmit(
+        { ...payload },
+        {
+          onSuccess(data) {
+            if (data) {
+              dispatch(
+                utilActions.UtilsShowAlert({
+                  msg: data.message || 'DATA SUBMITTED',
+                  type: 'success'
+                })
+              )
+
+              router.replace('/absensi')
+            }
+          }
+        }
+      )
+    },
+    [dispatch, mutationsSubmit, router]
+  )
 
   /** Render Functions */
   const renderAttendance = useCallback(
@@ -253,6 +284,7 @@ const Page = () => {
         <ModalConfirmation
           onSubmit={() => onSubmit(watchState)}
           open={isOpenConfirmation}
+          isLoading={isLoadingSubmit}
           description={`Apakah anda yakin untuk submit data Absent ? `}
           toggle={onToggleConfirmation}
           type='warning'
