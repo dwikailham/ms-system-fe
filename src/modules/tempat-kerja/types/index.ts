@@ -1,4 +1,5 @@
 export type TListWorkPlacement = {
+  id: number
   uuid: string
   name: string
   address: string
