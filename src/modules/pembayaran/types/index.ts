@@ -22,6 +22,18 @@ export type TApiListPagination = {
   }
 }
 
+export type TListPayday = {
+  payday_id: string
+  start_date: string
+  end_date: string
+  work_placement: string
+  total_salary: number
+}
+
+export interface IApiResponseListPayday extends TApiListPagination {
+  data: Array<TListPayday>
+}
+
 export type TQueryParams = {
   page: number
   limit: number

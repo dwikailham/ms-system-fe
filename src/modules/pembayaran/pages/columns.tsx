@@ -1,11 +1,64 @@
 /** Third Party Imports */
-import { type MRT_ColumnDef } from 'material-react-table'
-import { TListPresence, GroupedEmployee } from '@modules/pembayaran/types'
+import { type MRT_PaginationState, type MRT_ColumnDef } from 'material-react-table'
+import { TListPresence, GroupedEmployee, TListPayday } from '@modules/pembayaran/types'
 import { numericFormatter } from 'react-number-format'
+
+/** MUI Material */
+import { Typography, IconButton } from '@mui/material'
+import { RemoveRedEyeOutlined } from '@mui/icons-material'
 
 /** Component Imports */
 import { formatDate } from '@utils/commons'
-import { Typography } from '@mui/material'
+
+export const columns = (pagination: MRT_PaginationState): MRT_ColumnDef<TListPayday>[] => [
+  {
+    header: 'No',
+    Cell: ({ row }) => row.index + 1 + pagination.pageIndex * pagination.pageSize,
+    size: 10
+  },
+  {
+    accessorKey: 'work_placement',
+    header: 'Tempat Kerja'
+  },
+  {
+    accessorKey: 'start_date',
+    header: 'Tanggal Mulai',
+    Cell: ({ row }) => {
+      const date = row.original.start_date || ''
+
+      return <>{formatDate(date)}</>
+    }
+  },
+  {
+    accessorKey: 'end_date',
+    header: 'Tanggal Akhir',
+    Cell: ({ row }) => {
+      const date = row.original.end_date || ''
+
+      return <>{formatDate(date)}</>
+    }
+  },
+  {
+    accessorKey: 'total_salary',
+    header: 'Total',
+    Cell: ({ row }) => {
+      const amount = row.original.total_salary
+
+      return `Rp ${numericFormatter(amount.toString(), { thousandSeparator: '.' })}`
+    }
+  },
+  {
+    header: 'Action',
+    size: 10,
+    Cell: ({ row }) => {
+      return (
+        <IconButton>
+          <RemoveRedEyeOutlined />
+        </IconButton>
+      )
+    }
+  }
+]
 
 export const columnsAdd = (): MRT_ColumnDef<TListPresence>[] => [
   {
