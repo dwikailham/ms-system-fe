@@ -1,7 +1,8 @@
 // ** Icon imports
 import HomeOutline from 'mdi-material-ui/HomeOutline'
-import EmailOutline from 'mdi-material-ui/EmailOutline'
-import ShieldOutline from 'mdi-material-ui/ShieldOutline'
+
+// import EmailOutline from 'mdi-material-ui/EmailOutline'
+// import ShieldOutline from 'mdi-material-ui/ShieldOutline'
 import { Source, HowToReg, Wallet } from '@mui/icons-material'
 
 // ** Type import
@@ -41,19 +42,20 @@ const navigation = (): VerticalNavItemsType => {
       title: 'Pembayaran Pegawai',
       icon: Wallet,
       path: '/pembayaran'
-    },
-    {
-      title: 'Second Page',
-      icon: EmailOutline,
-      path: '/second-page'
-    },
-    {
-      title: 'Access Control',
-      icon: ShieldOutline,
-      path: '/acl',
-      action: 'read',
-      subject: 'acl-page'
     }
+
+    // {
+    //   title: 'Second Page',
+    //   icon: EmailOutline,
+    //   path: '/second-page'
+    // },
+    // {
+    //   title: 'Access Control',
+    //   icon: ShieldOutline,
+    //   path: '/acl',
+    //   action: 'read',
+    //   subject: 'acl-page'
+    // }
   ]
 }
 
