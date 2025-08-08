@@ -66,17 +66,23 @@ export type TForm = {
   presences: Array<TListPresence>
 }
 
-export type TApiDetailPresence = {
-  date: string
-  employees: Array<{
-    employee_id: number
-    work_placement_id: number
-  }>
-}
-
 export type GroupedEmployee = {
   employee_id: number
   name_employee: string
   total_salary: number
   total_days: number
+}
+
+export type TApiResponseDetail = {
+  start_date: string
+  end_date: string
+  work_placement: string
+  employees: Array<{
+    employee_id: number
+    total_salary: string
+    total_days: number
+    employee: {
+      name: string
+    }
+  }>
 }
