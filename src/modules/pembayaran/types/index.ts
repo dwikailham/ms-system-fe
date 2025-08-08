@@ -29,7 +29,7 @@ export type TQueryParams = {
 }
 
 export type TPayloadCreate = {
-  work_placement_id: number
+  work_placement_id: string
   start_date: string
   end_date: string
   employees: Array<{

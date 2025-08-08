@@ -1,5 +1,5 @@
 /** React Imports */
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 // ** MUI Imports
 import {
@@ -20,11 +20,10 @@ import { useRouter } from 'next/router'
 
 /** Component Imports */
 import { useGetList } from '@modules/tempat-kerja/hooks'
-import { useGetListPresence } from '@modules/pembayaran/hooks'
-
-// import { useGetEmployeeByWorkId } from '../../hooks'
-// import { columnsEmployee } from './columnsEmployee'
-// import { ModalConfirmation } from '@modules/components'
+import { useGetListPresence, usePostPayRoll } from '@modules/pembayaran/hooks'
+import { ModalConfirmation } from '@components/index'
+import { actions as utilActions } from '@stores/utils'
+import { useAppDispatch } from '@hooks/useStore'
 
 /** Third Party Imports */
 import * as yup from 'yup'
@@ -38,7 +37,7 @@ import { MaterialReactTable } from 'material-react-table'
 import { columns, columnsDetail, columnsSummary } from './columns'
 
 /** Type Imports */
-import { TForm, TListPresence, GroupedEmployee } from '../types'
+import { TForm, TListPresence, GroupedEmployee, TPayloadCreate } from '@modules/pembayaran/types'
 import { NumericFormat } from 'react-number-format'
 
 const schema = () => {
@@ -59,15 +58,18 @@ const DEFAULT_VALUES: TForm = {
 const Page = () => {
   /** Hooks */
   const router = useRouter()
+  const dispatch = useAppDispatch()
 
   /** States */
+  const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
 
   /** Stores */
   const {
     control,
     formState: { errors },
     watch,
-    setValue
+    setValue,
+    handleSubmit
   } = useForm<TForm>({
     defaultValues: DEFAULT_VALUES,
     resolver: yupResolver(schema()),
@@ -84,6 +86,9 @@ const Page = () => {
     startDate: watchState?.start_date ? dayjs(watchState?.start_date)?.format('YYYY-MM-DD') : '',
     work_placement_id: watchState.work_placement?.value || ''
   })
+
+  /** Mutations */
+  const { mutateAsync: mutationSubmit, isPending: isLoadingSubmit } = usePostPayRoll()
 
   /** Vars */
   const optionsWorkPlacement = useMemo(() => {
@@ -133,9 +138,39 @@ const Page = () => {
   }, [isSuccess, queryPresence, setValue])
 
   /** Functions */
+  const onToggleConfirmation = useCallback(() => setIsOpenConfirmation(prev => !prev), [])
+
+  const onSubmit = useCallback(
+    (val: TForm) => {
+      const payload: TPayloadCreate = {
+        employees: result,
+        end_date: dayjs(val.end_date).format('YYYY-MM-DD'),
+        start_date: dayjs(val.start_date).format('YYYY-MM-DD'),
+        work_placement_id: val?.work_placement?.value || ''
+      }
+
+      mutationSubmit(
+        { ...payload },
+        {
+          onSuccess(data) {
+            if (data) {
+              dispatch(
+                utilActions.UtilsShowAlert({
+                  msg: data.message || 'DATA SUBMITTED',
+                  type: 'success'
+                })
+              )
+
+              router.replace('/pembayaran')
+            }
+          }
+        }
+      )
+    },
+    [dispatch, mutationSubmit, result, router]
+  )
 
   /** Render Functions */
-
   const renderSalary = useCallback(
     (parentIdx: number, childIdx: number, isLeave: boolean) => {
       const currVal = presences[parentIdx].employees[childIdx]
@@ -299,12 +334,27 @@ const Page = () => {
                   <Button variant='outlined' color='secondary' onClick={() => router.back()}>
                     Kembali
                   </Button>
+                  <Button variant='contained' onClick={handleSubmit(onToggleConfirmation)}>
+                    Submit
+                  </Button>
                 </Box>
               </Grid>
             </Grid>
           </CardContent>
         </Card>
       </Grid>
+      {isOpenConfirmation && (
+        <ModalConfirmation
+          onSubmit={() => onSubmit(watchState)}
+          open={isOpenConfirmation}
+          isLoading={isLoadingSubmit}
+          description={`Apakah anda yakin untuk Submit untuk ${dayjs(watchState.start_date).format(
+            'DD MMM YYYY'
+          )} - ${dayjs(watchState.end_date).format('DD MMM YYYY')}  ? `}
+          toggle={onToggleConfirmation}
+          type='warning'
+        />
+      )}
     </Grid>
   )
 }
