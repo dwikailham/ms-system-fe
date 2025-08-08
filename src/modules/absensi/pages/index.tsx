@@ -61,7 +61,7 @@ const Page = () => {
                 color='primary'
                 startIcon={<Add />}
               >
-                Action Kehadiran
+                Kehadiran
               </Button>
             }
           ></CardHeader>
