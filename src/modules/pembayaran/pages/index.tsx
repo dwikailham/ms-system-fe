@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 /** Component Imports */
 import { useGetListPayday } from '@modules/pembayaran/hooks'
 import { columns } from './columns'
+import { ModalDetail } from '@modules/pembayaran/components'
 
 /** Third Party Imports */
 import { MaterialReactTable, MRT_PaginationState } from 'material-react-table'
@@ -26,6 +27,8 @@ const Page = () => {
     pageIndex: 0,
     pageSize: 10
   })
+  const [isOpenDetail, setIsOpenDetail] = useState<boolean>(false)
+  const [paydayIdSelected, setPaydayIdSelected] = useState<string>('')
 
   /** Queries */
   const {
@@ -38,6 +41,11 @@ const Page = () => {
   /** Functions */
   const handleChangePagination = useCallback((value: any) => {
     setPagination(value)
+  }, [])
+
+  const toggleDetail = useCallback((id: string) => {
+    setIsOpenDetail(prev => !prev)
+    setPaydayIdSelected(id)
   }, [])
 
   /** Render Functions */
@@ -56,7 +64,7 @@ const Page = () => {
           />
           <MaterialReactTable
             data={queryUser?.data || []}
-            columns={columns(pagination)}
+            columns={columns(pagination, toggleDetail)}
             initialState={{ density: 'compact' }}
             enableColumnActions={false}
             enableColumnFilters={false}
@@ -82,6 +90,7 @@ const Page = () => {
           />
         </Card>
       </Grid>
+      {isOpenDetail && <ModalDetail open={isOpenDetail} toggle={() => toggleDetail('')} paydayId={paydayIdSelected} />}
     </Grid>
   )
 }

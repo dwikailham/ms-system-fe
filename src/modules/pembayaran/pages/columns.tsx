@@ -10,7 +10,10 @@ import { RemoveRedEyeOutlined } from '@mui/icons-material'
 /** Component Imports */
 import { formatDate } from '@utils/commons'
 
-export const columns = (pagination: MRT_PaginationState): MRT_ColumnDef<TListPayday>[] => [
+export const columns = (
+  pagination: MRT_PaginationState,
+  toggleDetail: (id: string) => void
+): MRT_ColumnDef<TListPayday>[] => [
   {
     header: 'No',
     Cell: ({ row }) => row.index + 1 + pagination.pageIndex * pagination.pageSize,
@@ -52,7 +55,7 @@ export const columns = (pagination: MRT_PaginationState): MRT_ColumnDef<TListPay
     size: 10,
     Cell: ({ row }) => {
       return (
-        <IconButton>
+        <IconButton onClick={() => toggleDetail(row.original.payday_id)}>
           <RemoveRedEyeOutlined />
         </IconButton>
       )
