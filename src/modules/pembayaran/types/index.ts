@@ -61,3 +61,10 @@ export type TApiDetailPresence = {
     work_placement_id: number
   }>
 }
+
+export type GroupedEmployee = {
+  employee_id: number
+  name_employee: string
+  total_salary: number
+  total_days: number
+}

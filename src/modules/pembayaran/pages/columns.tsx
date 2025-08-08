@@ -1,9 +1,11 @@
 /** Third Party Imports */
 import { type MRT_ColumnDef } from 'material-react-table'
-import { TListPresence } from '@modules/pembayaran/types'
+import { TListPresence, GroupedEmployee } from '@modules/pembayaran/types'
+import { numericFormatter } from 'react-number-format'
 
 /** Component Imports */
 import { formatDate } from '@utils/commons'
+import { Typography } from '@mui/material'
 
 export const columns = (): MRT_ColumnDef<TListPresence>[] => [
   {
@@ -23,7 +25,7 @@ export const columns = (): MRT_ColumnDef<TListPresence>[] => [
 ]
 
 export const columnsDetail = (
-  renderSalary: (parentIdx: number, childIndex: number) => React.ReactNode,
+  renderSalary: (parentIdx: number, childIndex: number, isLeave: boolean) => React.ReactNode,
   parentIdx: number
 ): MRT_ColumnDef<TListPresence['employees'][0]>[] => [
   {
@@ -40,6 +42,34 @@ export const columnsDetail = (
   },
   {
     header: 'Gaji per hari',
-    Cell: ({ row }) => renderSalary(parentIdx, row.index)
+    Cell: ({ row }) => renderSalary(parentIdx, row.index, row.original.attendance !== 'HADIR')
+  }
+]
+
+export const columnsSummary = (total: number): MRT_ColumnDef<GroupedEmployee>[] => [
+  {
+    accessorKey: 'name_employee',
+    header: 'Nama Pegawai'
+  },
+  {
+    accessorKey: 'total_days',
+    header: 'Total Kehadiran',
+    Cell: ({ row }) => `${row.original.total_days} hari`
+  },
+  {
+    accessorKey: 'total_salary',
+    header: 'Total',
+    Cell: ({ row }) => {
+      const amount = row.original.total_salary
+
+      return `Rp ${numericFormatter(amount.toString(), { thousandSeparator: '.' })}`
+    },
+    Footer: () => {
+      return (
+        <Typography fontWeight={'bold'}>{`Rp. ${numericFormatter(total.toString(), {
+          thousandSeparator: '.'
+        })}`}</Typography>
+      )
+    }
   }
 ]
