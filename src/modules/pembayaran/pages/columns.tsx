@@ -7,7 +7,7 @@ import { numericFormatter } from 'react-number-format'
 import { formatDate } from '@utils/commons'
 import { Typography } from '@mui/material'
 
-export const columns = (): MRT_ColumnDef<TListPresence>[] => [
+export const columnsAdd = (): MRT_ColumnDef<TListPresence>[] => [
   {
     header: 'No',
     Cell: ({ row }) => row.index + 1,

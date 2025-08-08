@@ -34,7 +34,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { MaterialReactTable } from 'material-react-table'
-import { columns, columnsDetail, columnsSummary } from './columns'
+import { columnsAdd, columnsDetail, columnsSummary } from './columns'
 
 /** Type Imports */
 import { TForm, TListPresence, GroupedEmployee, TPayloadCreate } from '@modules/pembayaran/types'
@@ -260,7 +260,7 @@ const Page = () => {
               </Grid>
               <Grid item xs={12}>
                 <MaterialReactTable
-                  columns={columns()}
+                  columns={columnsAdd()}
                   data={presences || []}
                   initialState={{ density: 'compact' }}
                   enableColumnActions={false}
