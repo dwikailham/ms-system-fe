@@ -166,7 +166,7 @@ const Page = () => {
             enableStickyFooter
             manualPagination
             mrtTheme={theme => ({
-              baseBackgroundColor: theme.palette.background.paper //change default background color
+              baseBackgroundColor: theme.palette.background.paper
             })}
             muiSearchTextFieldProps={{
               placeholder: `Search`,
