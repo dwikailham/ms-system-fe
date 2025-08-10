@@ -5,7 +5,7 @@ import { Edit } from '@mui/icons-material'
 /** Third Party Imports */
 import { type MRT_ColumnDef, type MRT_PaginationState } from 'material-react-table'
 import { TListEmployee } from '../types'
-import { numericFormatter } from 'react-number-format'
+import { formatAmount } from '@utils/commons'
 
 /** Component Imports */
 import CustomChip from 'src/@core/components/mui/chip'
@@ -37,7 +37,7 @@ export const columns = (
     Cell: ({ row }) => {
       const amount = row.original.salary
 
-      return `Rp ${numericFormatter(amount.toString(), { thousandSeparator: '.' })}`
+      return `Rp ${formatAmount(amount)}`
     }
   },
   {

@@ -1,14 +1,13 @@
 /** Third Party Imports */
 import { type MRT_PaginationState, type MRT_ColumnDef } from 'material-react-table'
 import { TListPresence, GroupedEmployee, TListPayday } from '@modules/pembayaran/types'
-import { numericFormatter } from 'react-number-format'
 
 /** MUI Material */
 import { Typography, IconButton } from '@mui/material'
 import { RemoveRedEyeOutlined } from '@mui/icons-material'
 
 /** Component Imports */
-import { formatDate } from '@utils/commons'
+import { formatDate, formatAmount } from '@utils/commons'
 
 export const columns = (
   pagination: MRT_PaginationState,
@@ -47,7 +46,7 @@ export const columns = (
     Cell: ({ row }) => {
       const amount = row.original.total_salary
 
-      return `Rp ${numericFormatter(amount.toString(), { thousandSeparator: '.' })}`
+      return `Rp ${formatAmount(amount)}`
     }
   },
   {
@@ -118,14 +117,10 @@ export const columnsSummary = (total: number): MRT_ColumnDef<GroupedEmployee>[] 
     Cell: ({ row }) => {
       const amount = row.original.total_salary
 
-      return `Rp ${numericFormatter(amount.toString(), { thousandSeparator: '.' })}`
+      return `Rp ${formatAmount(amount)}`
     },
     Footer: () => {
-      return (
-        <Typography fontWeight={'bold'}>{`Rp. ${numericFormatter(total.toString(), {
-          thousandSeparator: '.'
-        })}`}</Typography>
-      )
+      return <Typography fontWeight={'bold'}>{`Rp. ${formatAmount(total)}`}</Typography>
     }
   }
 ]

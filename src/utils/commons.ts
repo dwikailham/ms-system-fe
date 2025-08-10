@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prefer-regex-literals */
 import { useEffect, useRef } from 'react'
+import { numericFormatter } from 'react-number-format'
 import dayjs from 'dayjs'
 
 export function usePrevious(value: any) {
@@ -147,4 +148,12 @@ export const formatDate = (val: string): string => {
   }
 
   return ''
+}
+
+export const formatAmount = (val: number): string => {
+  if (val) {
+    return numericFormatter(val.toString(), { thousandSeparator: '.' })
+  }
+
+  return '0'
 }
