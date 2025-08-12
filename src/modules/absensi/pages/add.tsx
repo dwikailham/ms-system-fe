@@ -8,13 +8,13 @@ import { useRouter } from 'next/router'
 import { Card, Grid, CardHeader, CardContent } from '@mui/material'
 
 /** Component Imports */
-import { usePostAttendance } from '../hooks'
+import { usePostAttendance } from '@modules/absensi/hooks'
 import { actions as utilActions } from '@stores/utils'
 import { useAppDispatch } from '@hooks/useStore'
 import { FormController } from '@modules/absensi/components'
 
 /** Type Imports */
-import { TForm, TPayloadCreate } from '../types'
+import { TForm, TPayloadCreate } from '@modules/absensi/types'
 
 const Page = () => {
   /** Hooks */

@@ -4,7 +4,7 @@ import { Edit } from '@mui/icons-material'
 
 /** Third Party Imports */
 import { type MRT_ColumnDef, type MRT_PaginationState } from 'material-react-table'
-import { TListPresence } from '../types'
+import { TListPresence } from '@modules/absensi/types'
 
 /** Component Imports */
 import { formatDate } from '@utils/commons'

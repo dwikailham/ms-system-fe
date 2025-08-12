@@ -9,12 +9,12 @@ import { Add } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 
 /** Component Imports */
-import { useGetList } from '../hooks'
+import { useGetList } from '@modules/absensi/hooks'
 import { columns } from './columns'
 
 /** Third Party Imports */
 import { MaterialReactTable, MRT_PaginationState } from 'material-react-table'
-import { TListPresence } from '../types'
+import { TListPresence } from '@modules/absensi/types'
 
 /** Type Imports */
 

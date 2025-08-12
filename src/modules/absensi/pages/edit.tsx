@@ -8,13 +8,13 @@ import { useRouter } from 'next/router'
 import { Card, Grid, CardHeader, CardContent } from '@mui/material'
 
 /** Component Imports */
-import { useGetDetail, usePatchData } from '../hooks'
+import { useGetDetail, usePatchData } from '@modules/absensi/hooks'
 import { FormController } from '@modules/absensi/components'
 import { actions as utilActions } from '@stores/utils'
 import { useAppDispatch } from '@hooks/useStore'
 
 /** Type Imports */
-import { TForm, TPayloadCreate } from '../types'
+import { TForm, TPayloadCreate } from '@modules/absensi/types'
 
 type TProps = {
   id: string

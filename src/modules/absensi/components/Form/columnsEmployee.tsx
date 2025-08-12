@@ -2,7 +2,7 @@
 
 /** Third Party Imports */
 import { type MRT_ColumnDef } from 'material-react-table'
-import { TForm } from '../../types'
+import { TForm } from '@modules/absensi/types'
 import React from 'react'
 
 /** Component Imports */

@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 
 /** Component Imports */
 import { useGetList } from '@modules/tempat-kerja/hooks'
-import { useGetEmployeeByWorkId } from '../../hooks'
+import { useGetEmployeeByWorkId } from '@modules/absensi/hooks'
 import { columnsEmployee } from './columnsEmployee'
 import { ModalConfirmation } from '@modules/components'
 
@@ -21,7 +21,7 @@ import dayjs from 'dayjs'
 import { MaterialReactTable } from 'material-react-table'
 
 /** Type Imports */
-import { TApiDetailPresence, TAutoCompleteField, TForm } from '../../types'
+import { TApiDetailPresence, TAutoCompleteField, TForm } from '@modules/absensi/types'
 
 const schema = () => {
   return yup.object().shape({
